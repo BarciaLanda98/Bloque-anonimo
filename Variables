@@ -1,0 +1,50 @@
+-- Creacion e impresion de variables
+DECLARE
+  V_DESCRIPCION  VARCHAR2(50); -- Se inicializa en NULL
+  V_NOMBRE       VARCHAR2(50) DEFAULT 'Carlos'; -- Su valor inicial es "Carlos"
+  V_PAIS         VARCHAR2(50) := 'Ecuador'; -- Su valor inicial es "Ecuador"
+  V_NRO_ASIENTO  NUMBER := 35; -- Su valor inicial es 35
+  V_CONTADOR     BINARY_INTEGER := 0; -- Su valor inicial es 0
+BEGIN
+  DBMS_OUTPUT.PUT_LINE( 'DESCRIPCION: ' || V_DESCRIPCION );
+  DBMS_OUTPUT.PUT_LINE( 'NOMBRE: ' || V_NOMBRE );
+  DBMS_OUTPUT.PUT_LINE( 'PAIS: ' || V_PAIS );
+  DBMS_OUTPUT.PUT_LINE( 'NRO. ASIENTO: ' || V_NRO_ASIENTO );
+  DBMS_OUTPUT.PUT_LINE( 'CONTADOR: ' || V_CONTADOR );
+END;
+/
+-- Sentencia de asignacion
+DECLARE
+   nombre VARCHAR2(50);       -- Declaración de una variable llamada nombre de tipo VARCHAR2 con una longitud máxima de 50 caracteres.
+   edad NUMBER := 30;         -- Declaración y asignación inicial de una variable llamada edad de tipo NUMBER con el valor inicial de 30.
+BEGIN
+   nombre := 'Juan';          -- Asignación del valor 'Juan' a la variable nombre.
+   edad := edad + 1;          -- Incremento en 1 del valor de la variable edad.
+   DBMS_OUTPUT.PUT_LINE('Hola, ' || nombre || '. El próximo año tendrás ' || edad || ' años.');
+   -- Impresión de un mensaje en la salida de DBMS que concatena el valor de nombre y edad en un mensaje estructurado.
+END;
+/
+
+-- Sentencia SELECT 
+CREATE OR REPLACE FUNCTION HR.GET_EMAIL
+( P_EMPLOYEE_ID IN HR.EMPLOYEES.EMPLOYEE_ID%TYPE )
+RETURN HR.EMPLOYEES.EMAIL%TYPE
+IS
+  V_EMAIL HR.EMPLOYEES.EMAIL%TYPE;
+BEGIN
+  -- Consulta para obtener el correo electrónico del empleado
+  SELECT EMAIL INTO V_EMAIL
+  FROM HR.EMPLOYEES
+  WHERE EMPLOYEE_ID = P_EMPLOYEE_ID;
+
+  -- Devolver el correo electrónico encontrado
+  RETURN V_EMAIL;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL; -- Manejo de excepción cuando no se encuentra ningún empleado con el ID proporcionado
+  WHEN OTHERS THEN
+    RETURN NULL; -- Manejo de otras excepciones
+END;
+/
+SELECT HR.GET_EMAIL(100) AS EMPLOYEE_EMAIL
+FROM DUAL;

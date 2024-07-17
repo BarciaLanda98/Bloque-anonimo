@@ -1,0 +1,23 @@
+-- Los parametros no se pueden dimensionar
+CREATE OR REPLACE PROCEDURE HR.SP_SHOW
+( P_CADENA IN VARCHAR2 )
+IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(P_CADENA);
+END;
+/
+-- LAS VARIABLES TIPO BOOLEAN NO SE PUEDEN IMPRIMIR CON DBMS_OUTPUT
+DECLARE
+  V_OK BOOLEAN := TRUE;     -- Declaración de una variable booleana inicializada en TRUE
+  V_OK2 VARCHAR2(20);        -- Declaración de una variable VARCHAR2 para almacenar un valor de texto
+BEGIN
+  IF V_OK THEN               -- Inicio de una condición IF que evalúa la variable booleana V_OK
+    V_OK2 := 'TRUE';         -- Asignación del valor 'TRUE' a la variable V_OK2 si V_OK es verdadero
+  ELSE
+    V_OK2 := 'FALSE';        -- Asignación del valor 'FALSE' a la variable V_OK2 si V_OK es falso
+  END IF;
+
+  DBMS_OUTPUT.PUT_LINE('OK: ' || V_OK2);  -- Imprime el valor de V_OK2 concatenado con el texto 'OK: '
+END;
+/
+

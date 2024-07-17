@@ -23,4 +23,8 @@ EXCEPTION
       DBMS_OUTPUT.PUT_LINE('Ocurrió un error: ' || SQLERRM);
 END actualizar_salario;
 /
-
+-- Ejecutar actualizacion
+BEGIN
+   actualizar_salario(100, 500);
+END;
+/

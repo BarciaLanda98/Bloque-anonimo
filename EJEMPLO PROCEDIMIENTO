@@ -11,10 +11,16 @@ BEGIN
    
    -- Confirmar la transacción
    COMMIT;
-EXCEPTION
-   WHEN NO_DATA_FOUND THEN
+   
+   -- Verificar si alguna fila fue actualizada
+   IF SQL%ROWCOUNT = 0 THEN
       DBMS_OUTPUT.PUT_LINE('No se encontró ningún empleado con ese ID.');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('El salario del empleado con ID ' || p_employee_id || ' ha sido actualizado.');
+   END IF;
+EXCEPTION
    WHEN OTHERS THEN
       DBMS_OUTPUT.PUT_LINE('Ocurrió un error: ' || SQLERRM);
 END actualizar_salario;
 /
+

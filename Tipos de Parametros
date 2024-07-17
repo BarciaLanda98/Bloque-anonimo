@@ -1,0 +1,18 @@
+-- Parametro IN
+CREATE OR REPLACE PROCEDURE ejemplo(p_valor IN NUMBER) AS
+BEGIN
+  -- Lógica del procedimiento
+  DBMS_OUTPUT.PUT_LINE('Valor recibido: ' || p_valor);
+END ejemplo;
+
+--Parametro OUT
+CREATE OR REPLACE PROCEDURE ejemplo_parametro_out(p_resultado OUT NUMBER) AS
+BEGIN
+  p_resultado := 100; -- Asignación de un valor a p_resultado
+END ejemplo_parametro_out;
+
+--Parametro IN OUT
+CREATE OR REPLACE PROCEDURE ejemplo_parametro_in_out(p_numero IN OUT INT) AS
+BEGIN
+  p_numero := p_numero + 1; -- Incrementar el valor de p_numero
+END ejemplo_parametro_in_out;

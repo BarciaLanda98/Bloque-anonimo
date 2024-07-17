@@ -8,10 +8,10 @@ BEGIN
    SELECT salary INTO v_salario_mensual
    FROM employees
    WHERE employee_id = p_employee_id;
-   
+
    -- Calcular el salario anual
    v_salario_anual := v_salario_mensual * 12;
-   
+
    -- Devolver el salario anual
    RETURN v_salario_anual;
 EXCEPTION
@@ -23,3 +23,16 @@ EXCEPTION
       RETURN NULL;
 END calcular_salario_anual;
 /
+
+DECLARE
+   v_salario_anual NUMBER;
+BEGIN
+   v_salario_anual := calcular_salario_anual(100);  -- Llamada a la función con el employee_id deseado
+   IF v_salario_anual IS NOT NULL THEN
+      DBMS_OUTPUT.PUT_LINE('El salario anual del empleado es: ' || v_salario_anual);
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('No se encontró ningún empleado con ese ID.');
+   END IF;
+END;
+/
+

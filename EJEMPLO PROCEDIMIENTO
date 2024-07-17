@@ -1,0 +1,20 @@
+CREATE OR REPLACE PROCEDURE actualizar_salario (
+   p_employee_id IN employees.employee_id%TYPE,
+   p_incremento IN NUMBER
+)
+IS
+BEGIN
+   -- Actualizar el salario del empleado
+   UPDATE employees
+   SET salary = salary + p_incremento
+   WHERE employee_id = p_employee_id;
+   
+   -- Confirmar la transacción
+   COMMIT;
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('No se encontró ningún empleado con ese ID.');
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('Ocurrió un error: ' || SQLERRM);
+END actualizar_salario;
+/

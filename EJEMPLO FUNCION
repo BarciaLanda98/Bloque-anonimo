@@ -1,0 +1,25 @@
+CREATE OR REPLACE FUNCTION calcular_salario_anual(p_employee_id IN employees.employee_id%TYPE)
+RETURN NUMBER
+IS
+   v_salario_mensual employees.salary%TYPE;
+   v_salario_anual NUMBER;
+BEGIN
+   -- Obtener el salario mensual del empleado
+   SELECT salary INTO v_salario_mensual
+   FROM employees
+   WHERE employee_id = p_employee_id;
+   
+   -- Calcular el salario anual
+   v_salario_anual := v_salario_mensual * 12;
+   
+   -- Devolver el salario anual
+   RETURN v_salario_anual;
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      -- Manejo de excepciones en caso de que no se encuentre el empleado
+      RETURN NULL;
+   WHEN OTHERS THEN
+      -- Manejo de otras excepciones
+      RETURN NULL;
+END calcular_salario_anual;
+/

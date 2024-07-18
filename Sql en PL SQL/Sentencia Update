@@ -1,0 +1,35 @@
+--Sentencia update
+/*
+Para este ejemplo crearemos la tabla resumen, donde almacenaremos 
+por cada departamento el número de empleados y el importe de su planilla.*/
+--Creamos tabla 
+CREATE TABLE HR.RESUMEN(
+	DEPARTMENT_ID NUMBER PRIMARY KEY,
+	DEPARTMENT_NAME VARCHAR2(30),
+	EMPS NUMBER,
+	PLANILLA NUMBER(12,2)
+);
+-- insertar codigo  y nombre de departamentos
+INSERT INTO HR.RESUMEN(DEPARTMENT_ID, DEPARTMENT_NAME) 
+SELECT DEPARTMENT_ID, DEPARTMENT_NAME FROM HR.DEPARTMENTS;
+
+SELECT * FROM HR.RESUMEN;
+--Procedimiento
+CREATE OR REPLACE PROCEDURE HR.SP_UPDATE_RESUMEN
+IS
+BEGIN
+	UPDATE HR.RESUMEN R
+	SET (EMPS, PLANILLA) = (
+		SELECT COUNT(1), SUM(SALARY)
+		FROM HR.EMPLOYEES E
+		WHERE E.DEPARTMENT_ID = R.DEPARTMENT_ID
+	);
+	COMMIT;
+	DBMS_OUTPUT.PUT_LINE('Proceso Ok');
+END;
+/
+--Ejecucion
+CALL HR.SP_UPDATE_RESUMEN();
+
+SELECT * FROM HR.RESUMEN;
+

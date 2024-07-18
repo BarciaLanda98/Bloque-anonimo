@@ -1,0 +1,42 @@
+--Recordar que es con esquema HR
+
+-- Procedimiento
+CREATE OR REPLACE PROCEDURE hr.sp_update_sueldo
+(
+  p_employee_id IN hr.employees.employee_id%TYPE,
+  p_salary      IN hr.employees.salary%TYPE
+)
+IS
+BEGIN
+  BEGIN
+    -- Intentar actualizar el salario del empleado
+    UPDATE hr.employees
+    SET salary = p_salary
+    WHERE employee_id = p_employee_id;
+
+    -- Verificar cuántas filas fueron afectadas
+    DBMS_OUTPUT.PUT_LINE('FILAS PROCESADAS: ' || SQL%ROWCOUNT);
+
+    -- Manejar el caso en que no se encontró ningún empleado con el ID proporcionado
+    IF SQL%ROWCOUNT = 0 THEN
+      DBMS_OUTPUT.PUT_LINE('EMPLOYEE ID NO EXISTE.');
+    ELSE
+      COMMIT;
+      DBMS_OUTPUT.PUT_LINE('PROCESO OK.');
+    END IF;
+    
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('Ocurrió un error: ' || SQLERRM);
+      ROLLBACK;
+  END;
+END;
+/
+
+-- Ejecución
+SELECT * FROM hr.employees;
+
+BEGIN
+  hr.sp_update_sueldo(200, 4000);
+END;
+/

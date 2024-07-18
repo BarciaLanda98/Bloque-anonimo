@@ -1,0 +1,126 @@
+--Procesamiento de cursores
+-- Creación del procedimiento
+CREATE OR REPLACE PROCEDURE hr.sp_cursor_01
+IS
+  -- Declarar el cursor
+  CURSOR c_demo IS
+    SELECT * FROM hr.departments;
+  
+  rec hr.departments%ROWTYPE;
+BEGIN
+  -- Abrir el cursor
+  OPEN c_demo;
+  
+  -- Recuperar la primera fila
+  DBMS_OUTPUT.PUT_LINE('ROWCOUNT: ' || c_demo%ROWCOUNT);
+  FETCH c_demo INTO rec;
+  DBMS_OUTPUT.PUT_LINE('ROWCOUNT: ' || c_demo%ROWCOUNT);
+  
+  -- Intentar recuperar la segunda fila
+  FETCH c_demo INTO rec;
+  DBMS_OUTPUT.PUT_LINE('ROWCOUNT: ' || c_demo%ROWCOUNT);
+  
+  -- Cerrar el cursor
+  CLOSE c_demo;
+  
+  -- Reportar los datos de la última fila recuperada
+  DBMS_OUTPUT.PUT_LINE('deptno: ' || rec.department_id);
+  DBMS_OUTPUT.PUT_LINE('dname:  ' || rec.department_name);
+  DBMS_OUTPUT.PUT_LINE('loc:    ' || rec.location_id);
+END;
+/
+-- Ejecución del procedimiento
+EXEC hr.sp_cursor_01;
+
+--Bucle simple (loop)
+DECLARE
+  CURSOR c_empleados IS
+    SELECT employee_id, first_name, last_name FROM employees;
+  v_employee_id employees.employee_id%TYPE;
+  v_first_name employees.first_name%TYPE;
+  v_last_name employees.last_name%TYPE;
+BEGIN
+  OPEN c_empleados;
+  LOOP
+    FETCH c_empleados INTO v_employee_id, v_first_name, v_last_name;
+    EXIT WHEN c_empleados%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Empleado: ' || v_first_name || ' ' || v_last_name);
+  END LOOP;
+  CLOSE c_empleados;
+END;
+/
+
+--Bucle While con Cursor
+DECLARE
+  CURSOR c_empleados IS
+    SELECT employee_id, first_name, last_name, salary
+    FROM employees;
+  
+  v_employee_id employees.employee_id%TYPE;
+  v_first_name employees.first_name%TYPE;
+  v_last_name employees.last_name%TYPE;
+  v_salary employees.salary%TYPE;
+BEGIN
+  -- Abrir el cursor
+  OPEN c_empleados;
+  
+  -- Inicializar la variable de control
+  FETCH c_empleados INTO v_employee_id, v_first_name, v_last_name, v_salary;
+  
+  -- Bucle WHILE con cursor
+  WHILE c_empleados%FOUND LOOP
+    -- Procesar cada fila del cursor
+    DBMS_OUTPUT.PUT_LINE('ID: ' || v_employee_id || ', Nombre: ' || v_first_name || ' ' || v_last_name || ', Salario: ' || v_salary);
+    
+    -- Obtener siguiente fila
+    FETCH c_empleados INTO v_employee_id, v_first_name, v_last_name, v_salary;
+  END LOOP;
+  
+  -- Cerrar el cursor
+  CLOSE c_empleados;
+END;
+/
+
+--Bucle For con cursor
+DECLARE
+  CURSOR c_empleados IS
+    SELECT employee_id, first_name, last_name, salary
+    FROM employees;
+BEGIN
+  FOR emp IN c_empleados LOOP
+    DBMS_OUTPUT.PUT_LINE('ID: ' || emp.employee_id || ', Nombre: ' || emp.first_name || ' ' || emp.last_name || ', Salario: ' || emp.salary);
+  END LOOP;
+END;
+/
+
+-- Bucle For implicito
+DECLARE
+  TYPE tabla_empleados IS TABLE OF employees%ROWTYPE;
+  empleados tabla_empleados := tabla_empleados();
+BEGIN
+  -- Insertar datos en la tabla
+  FOR i IN 1..5 LOOP
+    empleados.EXTEND;
+    empleados(i).employee_id := i;
+    empleados(i).first_name := 'Empleado' || i;
+    empleados(i).salary := 3000 + i * 100;
+  END LOOP;
+  
+  -- Mostrar los datos de la tabla usando el bucle FOR implícito
+  FOR empleado IN empleados.FIRST..empleados.LAST LOOP
+    DBMS_OUTPUT.PUT_LINE('ID: ' || empleados(empleado).employee_id || ', Nombre: ' || empleados(empleado).first_name || ', Salario: ' || empleados(empleado).salary);
+  END LOOP;
+END;
+/
+
+-- Cursor Implicito
+DECLARE
+  v_employee_name employees.first_name%TYPE;
+BEGIN
+  SELECT first_name INTO v_employee_name
+  FROM employees
+  WHERE employee_id = 100;
+  
+  DBMS_OUTPUT.PUT_LINE('Nombre del empleado: ' || v_employee_name);
+END;
+/

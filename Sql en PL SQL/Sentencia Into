@@ -1,0 +1,96 @@
+--Sentencia into 
+-- Desarrollar un procedimiento almacenado para registrar un nuevo empleado.
+-- Procedimiento
+-- Procedimiento
+
+CREATE OR REPLACE PROCEDURE HR.SP_NEW_EMP
+( 
+	P_EMPLOYEE_ID IN NUMBER, 
+	P_FIRST_NAME IN VARCHAR2,
+	P_LAST_NAME IN VARCHAR2,
+	P_EMAIL IN VARCHAR2,
+	P_PHONE_NUMBER IN VARCHAR2,
+	P_HIRE_DATE IN DATE,
+	P_JOB_ID IN VARCHAR2,
+	P_SALARY IN NUMBER,
+	P_COMMISSION_PCT IN NUMBER,
+	P_MANAGER_ID IN NUMBER,
+	P_DEPARTMENT_ID IN NUMBER 
+)
+IS
+	V_CONT NUMBER(5);
+BEGIN
+	-- Verificar código del empleado
+	SELECT COUNT(1) INTO V_CONT
+	FROM HR.EMPLOYEES WHERE EMPLOYEE_ID = P_EMPLOYEE_ID;
+	IF V_CONT > 0 THEN
+		RAISE_APPLICATION_ERROR(-20000, 'Código de empleado duplicado.');
+	END IF;
+	-- Verificar Código de Manager
+	SELECT COUNT(1) INTO V_CONT
+	FROM HR.EMPLOYEES WHERE EMPLOYEE_ID = P_MANAGER_ID;
+	IF V_CONT = 0 THEN
+		RAISE_APPLICATION_ERROR(-20000, 'Código de Manager (Jefe) no existe.');
+	END IF;
+	-- Verificar Departamento
+	SELECT COUNT(1) INTO V_CONT
+	FROM HR.DEPARTMENTS WHERE DEPARTMENT_ID = P_DEPARTMENT_ID;
+	IF V_CONT = 0 THEN
+		RAISE_APPLICATION_ERROR(-20000, 'Código de departamento no existe.');
+	END IF;
+	-- Proceso
+	INSERT INTO HR.EMPLOYEES (EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, HIRE_DATE, JOB_ID, SALARY, COMMISSION_PCT, MANAGER_ID, DEPARTMENT_ID) 
+	VALUES (P_EMPLOYEE_ID, P_FIRST_NAME, P_LAST_NAME, P_EMAIL, P_PHONE_NUMBER, P_HIRE_DATE, P_JOB_ID, P_SALARY, P_COMMISSION_PCT, P_MANAGER_ID, P_DEPARTMENT_ID);
+	COMMIT;
+	DBMS_OUTPUT.PUT_LINE('Proceso OK');
+END;
+/
+
+
+
+-- Verificar datos antes de la ejecución
+SELECT * FROM HR.DEPARTMENTS;
+SELECT * FROM HR.EMPLOYEES;
+
+-- Intentar ejecutar el procedimiento con un código de empleado duplicado
+BEGIN
+    HR.SP_NEW_EMP(101, 'GUSTAVO', 'CHIEF IOT', 102, SYSDATE, 9999, 0275, 10);
+END;
+/
+-- Verificar datos antes de la ejecución
+SELECT * FROM HR.DEPARTMENTS;
+SELECT * FROM HR.EMPLOYEES;
+
+-- Intentar ejecutar el procedimiento con un código de manager que no existe
+BEGIN
+    HR.SP_NEW_EMP(105615, 'GUSTAVO', 'CHIEF IOT', 999, SYSDATE, 9999, 2, 10);
+END;
+/
+--Codigo de departamento no existe
+-- Verificar datos antes de la ejecución
+SELECT * FROM HR.DEPARTMENTS;
+SELECT * FROM HR.EMPLOYEES;
+
+-- Intentar ejecutar el procedimiento con un código de departamento que no existe
+BEGIN
+    HR.SP_NEW_EMP(54489, 'GUSTAVO', 'CHIEF IOT', 102, SYSDATE, 9999, 5, 999);
+END;
+/
+--Ejecucion correcta 
+-- Verificar datos antes de la ejecución
+SELECT * FROM HR.DEPARTMENTS;
+SELECT * FROM HR.EMPLOYEES;
+-- Ejemplo de ejecución correcta
+--Borramos usuario si tiene ese ID
+DELETE FROM HR.EMPLOYEES WHERE EMPLOYEE_ID = 9999;
+--Creamos nuevo usuario
+BEGIN
+    HR.SP_NEW_EMP(9999, 'GUSTAVO', 'LASTNAME', 'EMAIL@DOMAIN.COM', '123-456-7890', SYSDATE, 'IT_PROG', 9999, NULL, 101, 60);
+END;
+/
+
+-- Verificar datos
+SELECT * FROM HR.DEPARTMENTS;
+SELECT * FROM HR.EMPLOYEES;
+
+

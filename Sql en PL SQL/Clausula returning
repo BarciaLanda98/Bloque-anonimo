@@ -1,0 +1,34 @@
+-- Creación del procedimiento en el esquema HR
+/*
+Desarrollar un procedimiento almacenado para incrementar el salario de un empleado, 
+el procedimiento debe retornar el nuevo salario.
+*/
+CREATE OR REPLACE PROCEDURE HR.SP_ADD_SAL
+( P_EMPLOYEE_ID IN NUMBER, P_INC_SAL IN NUMBER, P_NEW_SAL OUT NUMBER )
+IS
+BEGIN
+    UPDATE HR.EMPLOYEES
+    SET SALARY = SALARY + P_INC_SAL
+    WHERE EMPLOYEE_ID = P_EMPLOYEE_ID
+    RETURNING SALARY INTO P_NEW_SAL;
+    COMMIT;
+END;
+/
+
+-- Verificación de empleados antes de la actualización
+
+SELECT * FROM HR.EMPLOYEES;
+
+-- Llamar al procedimiento para aumentar el salario de un empleado específico
+
+DECLARE
+    V_NEW_SAL NUMBER(10,2);
+BEGIN
+    HR.SP_ADD_SAL(101, 100, V_NEW_SAL); -- Aquí se utiliza el EMPLOYEE_ID y el incremento del salario
+    DBMS_OUTPUT.PUT_LINE('NUEVO SALARIO: ' || V_NEW_SAL);
+END;
+/
+
+-- Verificar empleados después de la actualización
+
+SELECT * FROM HR.EMPLOYEES;

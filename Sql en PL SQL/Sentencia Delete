@@ -1,0 +1,45 @@
+--Sentencia Delete
+/*
+Desarrollar un procedimiento almacenado para eliminar un departamento, 
+primero debe verificar que no tenga registros relacionados en la tabla de empleados.*/
+--Procedimiento
+CREATE OR REPLACE PROCEDURE HR.SP_DEL_EMP( P_CODIGO NUMBER)
+IS
+    V_CONT NUMBER;
+BEGIN
+    -- Verifica si el departamento existe
+    SELECT COUNT(1) INTO V_CONT FROM HR.DEPARTMENTS WHERE DEPARTMENT_ID = P_CODIGO;
+    IF V_CONT = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('No existe el departamento.');
+        RETURN;
+    END IF;
+    
+    -- Verificar si hay empleados relacionados
+    SELECT COUNT(1) INTO V_CONT FROM HR.EMPLOYEES WHERE DEPARTMENT_ID = P_CODIGO;
+    IF V_CONT > 0 THEN
+        DBMS_OUTPUT.PUT_LINE('No se puede eliminar el departamento porque tiene empleados asociados.');
+        RETURN;
+    END IF;
+    
+    -- Eliminar departamento
+    DELETE FROM HR.DEPARTMENTS WHERE DEPARTMENT_ID = P_CODIGO;
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Proceso Ok');
+END;
+/
+--Ejecutar
+
+CALL HR.SP_DEL_EMP(61);
+
+-- Verificar que el departamento se eliminó correctamente
+SELECT * FROM HR.DEPARTMENTS;
+
+-- Intentar insertar un nuevo departamento con un ID que no exista actualmente
+INSERT INTO HR.DEPARTMENTS(DEPARTMENT_ID, DEPARTMENT_NAME) VALUES(61, 'PRUEBA');
+
+COMMIT;
+
+-- Verificar que se haya insertado el nuevo departamento correctamente
+SELECT * FROM HR.DEPARTMENTS WHERE DEPARTMENT_ID = 61;
+
+

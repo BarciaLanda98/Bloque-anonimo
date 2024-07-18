@@ -1,0 +1,173 @@
+--IF THEN
+DECLARE
+  v_salario NUMBER := 4000; -- Declaración y asignación de la variable v_salario
+BEGIN
+  IF v_salario > 3000 THEN -- Si el salario es mayor a 3000
+    DBMS_OUTPUT.PUT_LINE('El salario es mayor a 3000'); -- Imprimir mensaje
+  END IF; -- Fin de la condición IF
+END;
+/
+
+--IF THEN ELSE
+DECLARE
+  v_salario NUMBER := 4000; -- Declaración y asignación de la variable v_salario
+BEGIN
+  IF v_salario > 3000 THEN -- Si el salario es mayor a 3000
+    DBMS_OUTPUT.PUT_LINE('El salario es mayor a 3000'); -- Imprimir mensaje
+  END IF; -- Fin de la condición IF
+END;
+/
+
+--IF THEN ELSEIF ELSE
+DECLARE
+  v_salario NUMBER := 2500; -- Declaración y asignación de la variable v_salario
+BEGIN
+  IF v_salario > 3000 THEN -- Si el salario es mayor a 3000
+    DBMS_OUTPUT.PUT_LINE('El salario es mayor a 3000'); -- Imprimir mensaje
+  ELSIF v_salario = 3000 THEN -- Si el salario es igual a 3000
+    DBMS_OUTPUT.PUT_LINE('El salario es exactamente 3000'); -- Imprimir mensaje
+  ELSE -- Si el salario es menor a 3000
+    DBMS_OUTPUT.PUT_LINE('El salario es menor a 3000'); -- Imprimir mensaje alternativo
+  END IF; -- Fin de la condición IF-ELSIF-ELSE
+END;
+/
+
+--CASE SIMPLE
+DECLARE
+  v_dia VARCHAR2(10) := 'Lunes'; -- Declaración y asignación de la variable v_dia
+BEGIN
+  CASE v_dia
+    WHEN 'Lunes' THEN -- Si v_dia es 'Lunes'
+      DBMS_OUTPUT.PUT_LINE('Hoy es lunes'); -- Imprimir mensaje
+    WHEN 'Martes' THEN -- Si v_dia es 'Martes'
+      DBMS_OUTPUT.PUT_LINE('Hoy es martes'); -- Imprimir mensaje
+    ELSE -- Para cualquier otro valor de v_dia
+      DBMS_OUTPUT.PUT_LINE('Hoy no es lunes ni martes'); -- Imprimir mensaje alternativo
+  END CASE; -- Fin del bloque CASE
+END;
+/
+
+--CASE BUSQUEDA
+DECLARE
+  v_salario NUMBER := 4000; -- Declaración y asignación de la variable v_salario
+BEGIN
+  CASE
+    WHEN v_salario > 5000 THEN -- Si el salario es mayor a 5000
+      DBMS_OUTPUT.PUT_LINE('El salario es mayor a 5000'); -- Imprimir mensaje
+    WHEN v_salario > 3000 THEN -- Si el salario es mayor a 3000 pero menor o igual a 5000
+      DBMS_OUTPUT.PUT_LINE('El salario es mayor a 3000 pero menor o igual a 5000'); -- Imprimir mensaje
+    ELSE -- Si el salario es menor o igual a 3000
+      DBMS_OUTPUT.PUT_LINE('El salario es menor o igual a 3000'); -- Imprimir mensaje alternativo
+  END CASE; -- Fin del bloque CASE
+END;
+/
+
+--LOOP
+DECLARE
+  v_contador NUMBER := 0; -- Declaración y asignación de la variable v_contador
+BEGIN
+  LOOP
+    v_contador := v_contador + 1; -- Incrementar el contador
+    DBMS_OUTPUT.PUT_LINE('Contador: ' || v_contador); -- Imprimir el valor del contador
+    EXIT WHEN v_contador >= 5; -- Salir del bucle cuando el contador sea mayor o igual a 5
+  END LOOP; -- Fin del bucle LOOP
+END;
+/
+
+--WHILE LOOP
+DECLARE
+  v_contador NUMBER := 0; -- Declaración y asignación de la variable v_contador
+BEGIN
+  WHILE v_contador < 5 LOOP -- Mientras el contador sea menor a 5
+    v_contador := v_contador + 1; -- Incrementar el contador
+    DBMS_OUTPUT.PUT_LINE('Contador: ' || v_contador); -- Imprimir el valor del contador
+  END LOOP; -- Fin del bucle WHILE
+END;
+/
+
+--FOOR LOOP
+BEGIN
+  FOR i IN 1..5 LOOP -- Bucle que itera desde 1 hasta 5
+    DBMS_OUTPUT.PUT_LINE('Iteración: ' || i); -- Imprimir el valor de la iteración
+  END LOOP; -- Fin del bucle FOR
+END;
+/
+
+--EXIT
+DECLARE
+  v_contador NUMBER := 0; -- Declaración y asignación de la variable v_contador
+BEGIN
+  LOOP
+    v_contador := v_contador + 1; -- Incrementar el contador
+    DBMS_OUTPUT.PUT_LINE('Contador: ' || v_contador); -- Imprimir el valor del contador
+    EXIT WHEN v_contador >= 5; -- Salir del bucle cuando el contador sea mayor o igual a 5
+  END LOOP; -- Fin del bucle LOOP
+END;
+/
+
+--GOTO
+DECLARE
+  v_variable NUMBER := 10; -- Declaración y asignación de la variable v_variable
+BEGIN
+  IF v_variable = 10 THEN -- Si la variable es igual a 10
+    GOTO etiqueta; -- Saltar a la etiqueta
+  END IF;
+  DBMS_OUTPUT.PUT_LINE('Esto no se imprimirá'); -- Esto no se ejecutará debido al salto
+  <<etiqueta>>
+  DBMS_OUTPUT.PUT_LINE('Esto se imprimirá'); -- Esto se imprimirá
+END;
+/
+
+--NULL
+DECLARE
+  v_variable NUMBER := 10; -- Declaración y asignación de la variable v_variable
+BEGIN
+  IF v_variable = 10 THEN -- Si la variable es igual a 10
+    NULL; -- No hacer nada
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Esto no se imprimirá'); -- Esto no se imprimirá ya que la condición anterior es verdadera
+  END IF;
+END;
+/
+
+--Commit y Rollback
+BEGIN
+  UPDATE employees SET salary = salary * 1.10 WHERE employee_id = 100; -- Actualizar el salario del empleado con ID 100
+  COMMIT; -- Confirmar la transacción
+  DBMS_OUTPUT.PUT_LINE('Transacción confirmada.'); -- Imprimir mensaje de confirmación
+EXCEPTION
+  WHEN OTHERS THEN -- Manejar cualquier excepción
+    ROLLBACK; -- Revertir la transacción
+    DBMS_OUTPUT.PUT_LINE('Transacción revertida.'); -- Imprimir mensaje de reversión
+END;
+/
+
+--Ejemplo Completo Combinando Estructuras
+DECLARE
+  v_nombre VARCHAR2(50) := 'Juan'; -- Declaración y asignación de la variable v_nombre
+  v_contador NUMBER := 0; -- Declaración y asignación de la variable v_contador
+BEGIN
+  -- Estructura condicional
+  IF v_nombre = 'Juan' THEN -- Si el nombre es 'Juan'
+    DBMS_OUTPUT.PUT_LINE('¡Hola, Juan!'); -- Imprimir saludo
+  ELSE -- Si el nombre no es 'Juan'
+    DBMS_OUTPUT.PUT_LINE('No eres Juan'); -- Imprimir mensaje alternativo
+  END IF; -- Fin de la condición IF-ELSE
+
+  -- Estructura iterativa
+  FOR i IN 1..3 LOOP -- Bucle que itera desde 1 hasta 3
+    DBMS_OUTPUT.PUT_LINE('Iteración: ' || i); -- Imprimir el valor de la iteración
+  END LOOP; -- Fin del bucle FOR
+
+  -- Estructura de control de excepciones
+  BEGIN
+    v_contador := 1 / 0; -- Intentar dividir por cero (esto generará una excepción)
+  EXCEPTION
+    WHEN ZERO_DIVIDE THEN -- Manejar la excepción de división por cero
+      DBMS_OUTPUT.PUT_LINE('Error: División por cero.'); -- Imprimir mensaje de error
+  END; -- Fin del bloque de excepciones
+
+  -- Sentencia de control secuencial
+  DBMS_OUTPUT.PUT_LINE('Final del bloque PL/SQL.'); -- Imprimir mensaje final
+END;
+/

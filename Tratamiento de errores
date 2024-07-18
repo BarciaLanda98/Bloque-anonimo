@@ -1,0 +1,52 @@
+--Manejo de exepciones predefinidas
+DECLARE
+  v_divisor NUMBER := 0; -- Declaración y asignación de la variable v_divisor
+  v_resultado NUMBER; -- Declaración de la variable v_resultado
+BEGIN
+  v_resultado := 10 / v_divisor; -- Intentar dividir por cero
+EXCEPTION
+  WHEN ZERO_DIVIDE THEN -- Capturar la excepción de división por cero
+    DBMS_OUTPUT.PUT_LINE('Error: División por cero.'); -- Imprimir mensaje de error
+END;
+/
+
+-- Manejo de excepciones definidas por el usuario
+DECLARE
+  e_salario_bajo EXCEPTION; -- Declaración de una excepción definida por el usuario
+  v_salario NUMBER := 1000; -- Declaración y asignación de la variable v_salario
+BEGIN
+  IF v_salario < 2000 THEN -- Si el salario es menor a 2000
+    RAISE e_salario_bajo; -- Generar la excepción e_salario_bajo
+  END IF;
+EXCEPTION
+  WHEN e_salario_bajo THEN -- Capturar la excepción e_salario_bajo
+    DBMS_OUTPUT.PUT_LINE('Error: Salario demasiado bajo.'); -- Imprimir mensaje de error
+END;
+/
+
+--Uso de SQLERRM Y SQLCODE
+DECLARE
+  v_divisor NUMBER := 0; -- Declaración y asignación de la variable v_divisor
+  v_resultado NUMBER; -- Declaración de la variable v_resultado
+BEGIN
+  v_resultado := 10 / v_divisor; -- Intentar dividir por cero
+EXCEPTION
+  WHEN OTHERS THEN -- Capturar cualquier otra excepción no específica
+    DBMS_OUTPUT.PUT_LINE('Código de error: ' || SQLCODE); -- Imprimir el código de error
+    DBMS_OUTPUT.PUT_LINE('Mensaje de error: ' || SQLERRM); -- Imprimir el mensaje de error
+END;
+/
+
+-- Propagacion de excepciones
+DECLARE
+  PROCEDURE sub_procedimiento IS
+  BEGIN
+    RAISE NO_DATA_FOUND; -- Generar la excepción NO_DATA_FOUND
+  END;
+BEGIN
+  sub_procedimiento; -- Llamar al subprocedimiento
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN -- Capturar la excepción NO_DATA_FOUND
+    DBMS_OUTPUT.PUT_LINE('Error: No se encontraron datos.'); -- Imprimir mensaje de error
+END;
+/

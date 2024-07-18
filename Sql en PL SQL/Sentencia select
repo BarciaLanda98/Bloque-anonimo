@@ -1,0 +1,40 @@
+-- Sentencia Select 
+/*
+Desarrollar un procedimiento almacenado para consultar la cantidad 
+de empleados y el importe de salario de un departamento.
+*/
+
+CREATE OR REPLACE PROCEDURE HR.SP_GET_INFO_DEPTO
+(
+    P_IDDEPARTAMENTO IN NUMBER,
+    P_EMPLEADOS      OUT NUMBER,
+    P_IMPORTE        OUT NUMBER
+)
+IS
+BEGIN
+    SELECT COUNT(1), NVL(SUM(SALARY), 0)
+    INTO P_EMPLEADOS, P_IMPORTE
+    FROM HR.EMPLOYEES
+    WHERE DEPARTMENT_ID = P_IDDEPARTAMENTO;
+END;
+/
+
+
+-- Ejecución del procedimiento
+
+-- Verificar los departamentos disponibles en HR
+SELECT * FROM HR.DEPARTMENTS;
+
+-- Declaración de variables para almacenar los resultados del procedimiento
+DECLARE
+    P_EMPLEADOS  NUMBER(5);
+    P_IMPORTE    NUMBER(12, 2);
+BEGIN
+    -- Llamar al procedimiento SP_GET_INFO_DEPTO
+    HR.SP_GET_INFO_DEPTO( 50, P_EMPLEADOS, P_IMPORTE );
+    
+    -- Mostrar resultados
+    DBMS_OUTPUT.PUT_LINE('Empleados: ' || P_EMPLEADOS);
+    DBMS_OUTPUT.PUT_LINE('Planilla:  ' || P_IMPORTE);
+END;
+/

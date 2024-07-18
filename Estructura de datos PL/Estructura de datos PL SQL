@@ -1,0 +1,98 @@
+--REGISTRO
+DECLARE
+  TYPE empleado_rec IS RECORD (
+    id_empleado NUMBER,
+    nombre VARCHAR2(100),
+    salario NUMBER
+  );
+  
+  v_empleado empleado_rec; -- Declaración de una variable de tipo registro
+  
+BEGIN
+  -- Asignación de valores al registro
+  v_empleado.id_empleado := 1;
+  v_empleado.nombre := 'Carlos';
+  v_empleado.salario := 5000;
+  
+  -- Acceso a los campos del registro
+  DBMS_OUTPUT.PUT_LINE('ID: ' || v_empleado.id_empleado);
+  DBMS_OUTPUT.PUT_LINE('Nombre: ' || v_empleado.nombre);
+  DBMS_OUTPUT.PUT_LINE('Salario: ' || v_empleado.salario);
+END;
+/
+
+--VARRAY
+DECLARE
+  TYPE numeros_varray IS VARRAY(5) OF NUMBER; -- Declaración de un VARRAY de números
+  
+  v_numeros numeros_varray := numeros_varray(10, 20, 30, 40, 50); -- Inicialización del VARRAY
+  
+BEGIN
+  -- Acceso a los elementos del VARRAY
+  FOR i IN 1..v_numeros.COUNT LOOP
+    DBMS_OUTPUT.PUT_LINE('Elemento ' || i || ': ' || v_numeros(i));
+  END LOOP;
+END;
+/
+
+--Matrices Asociativas
+DECLARE
+  TYPE precios_aa IS TABLE OF NUMBER INDEX BY VARCHAR2(100); -- Declaración de una matriz asociativa
+  
+  v_precios precios_aa; -- Declaración de una variable de tipo matriz asociativa
+  
+BEGIN
+  -- Inicialización de la matriz asociativa
+  v_precios('Producto1') := 100;
+  v_precios('Producto2') := 150;
+  v_precios('Producto3') := 200;
+  
+  -- Acceso a los elementos de la matriz asociativa
+  DBMS_OUTPUT.PUT_LINE('Precio de Producto2: ' || v_precios('Producto2'));
+END;
+/
+
+--Tablas Anidadas
+DECLARE
+	TYPE tabla_varchar2 IS TABLE OF VARCHAR2 (100);
+	empleados tabla_varchar2 := tabla_varchar2 ();
+BEGIN
+	-- Tamaño Inicial
+	DBMS_OUTPUT.PUT_LINE('Tamaño Inicial: ' || empleados.COUNT);
+	-- Se añaden 4 elementos
+	empleados.EXTEND (4);
+	empleados (1) := 'Pepe';
+	empleados (2) := 'Elena';
+	empleados (3) := 'Carmen';
+	empleados (4) := 'Juan';
+	-- Se añade un elemento mas
+	empleados.EXTEND;
+	empleados (empleados.LAST) := 'Gustavo';
+	-- Tamaño Final
+	DBMS_OUTPUT.PUT_LINE('Tamaño Final: ' || empleados.COUNT);
+	-- Mostrar lista
+	FOR I IN 1 .. empleados.COUNT
+	LOOP
+		DBMS_OUTPUT.put_line ( empleados(I) );
+	END LOOP;
+END;
+/
+
+-- %RowType
+DECLARE
+  -- Declaración de una variable utilizando %ROWTYPE
+  v_employee employees%ROWTYPE;
+BEGIN
+  -- Asignación de valores utilizando SELECT INTO con %ROWTYPE
+  SELECT *
+  INTO v_employee
+  FROM employees
+  WHERE employee_id = 100; -- Suponiendo que el empleado con ID 100 existe
+  
+  -- Acceso a los campos del registro utilizando la variable %ROWTYPE
+  DBMS_OUTPUT.PUT_LINE('ID: ' || v_employee.employee_id);
+  DBMS_OUTPUT.PUT_LINE('Nombre: ' || v_employee.first_name || ' ' || v_employee.last_name);
+  DBMS_OUTPUT.PUT_LINE('Salario: ' || v_employee.salary);
+  DBMS_OUTPUT.PUT_LINE('Fecha de Contratación: ' || TO_CHAR(v_employee.hire_date, 'DD-MON-YYYY'));
+END;
+/

@@ -14,7 +14,9 @@ DECLARE
 BEGIN
   IF v_salario > 3000 THEN -- Si el salario es mayor a 3000
     DBMS_OUTPUT.PUT_LINE('El salario es mayor a 3000'); -- Imprimir mensaje
-  END IF; -- Fin de la condición IF
+  ELSE -- Si el salario es menor o igual a 3000
+    DBMS_OUTPUT.PUT_LINE('El salario es menor o igual a 3000'); -- Imprimir mensaje
+  END IF; -- Fin de la estructura IF-THEN-ELSE
 END;
 /
 
